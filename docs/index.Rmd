@@ -27,8 +27,8 @@ library(dplyr)
 #     -93.65, 42.0285,
 #     'Here is the <b>Department of Statistics</b>, ISU'
 #   )
-asset %>% transmute(lat =coalesce( potential_site_cordinates_latitude,potential_site_cordinates_001_latitude,Potential_gps_latitude),
-                    lon = coalesce(potential_site_cordinates_longitude,potential_site_cordinates_001_longitude,Potential_gps_longitude)) %>% 
+asset %>% transmute(lon =coalesce( potential_site_cordinates_latitude,potential_site_cordinates_001_latitude,Potential_gps_latitude),
+                    lat = coalesce(potential_site_cordinates_longitude,potential_site_cordinates_001_longitude,Potential_gps_longitude)) %>% 
   filter(!is.na(lon)) %>% 
   leaflet() %>% addTiles() %>% 
   addMarkers(~lon,~lat)
