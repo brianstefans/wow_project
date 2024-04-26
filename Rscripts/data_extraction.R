@@ -4,9 +4,9 @@ library(robotoolbox)
 
 ## setup
 kobo_setup(url = "https://eu.kobotoolbox.org",
-           token = Sys.getenv("token"))
-token <- kobo_token(username = "brianstefans",
-                    password = Sys.getenv("password"),
+           token = Sys.getenv("TOKEN"))
+token <- kobo_token(username = Sys.getenv("USERNAME"),
+                    password = Sys.getenv("PASSWORD"),
                     overwrite = TRUE)
 kobo_setup(url = "https://eu.kobotoolbox.org",
            token = token)
