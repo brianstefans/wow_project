@@ -9,10 +9,10 @@ on: [push]
 jobs:
   dataextration:
     # The type of runner that the job will run on
-    runs-on: macos-latest #ubuntu-latest #macos-latest
+    runs-on: ubuntu-latest #macos-latest
     # Load repo and install R
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v4
    # - uses: r-lib/actions/setup-r@master
     - uses: r-lib/actions/setup-r@v2
 
