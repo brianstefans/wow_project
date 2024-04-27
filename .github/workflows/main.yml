@@ -20,16 +20,16 @@ jobs:
     - name: Install packages
       run: |
         
-        R -e 'install.packages("robotoolbox")'
-        R -e 'install.packages("httr")'
-        R -e 'install.packages("dplyr")'
-        R -e 'install.packages("tidyr")'
-        R -e 'install.packages("readr")'
-        R -e 'install.packages("lubridate")'
-        R -e 'install.packages("stringr")'
-        R -e 'install.packages("purrr")'
-        R -e 'install.packages("janitor")'
-        R -e 'install.packages("shiny")'
+        Rscript -e 'install.packages("robotoolbox")'
+        Rscript -e 'install.packages("httr")'
+        Rscript -e 'install.packages("dplyr")'
+        Rscript -e 'install.packages("tidyr")'
+        Rscript -e 'install.packages("readr")'
+        Rscript -e 'install.packages("lubridate")'
+        Rscript -e 'install.packages("stringr")'
+        Rscript -e 'install.packages("purrr")'
+        Rscript -e 'install.packages("janitor")'
+        Rscript -e 'install.packages("shiny")'
     # Run R script
     - name: pull_data
       env: 
