@@ -1,7 +1,7 @@
 library(dplyr)
 library(robotoolbox)
 # remotes::install_github("dickoa/robotoolbox")# installing kobo package
-print(paste0("token-"Sys.getenv("TOKEN")))
+print(paste0("token-",Sys.getenv("TOKEN")))
 print(paste0("user-",Sys.getenv("USERNAME")))
 print(paste0("pswd-",Sys.getenv("PASSWORD")))
 ## setup
