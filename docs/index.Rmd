@@ -2,11 +2,45 @@
 title: "index"
 output: html_document
 date: "2024-04-25"
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F,warning = F,message = F)
-asset <- readRDS("../Data/test_data.rds")
+library(leaflet)
+library(dplyr)
+library(shiny)
+asset <- readRDS("../Data/test_data.rds") %>% mutate_if(is.character,~haven::as_factor(.))
+
+dta <- asset %>% select(uuid=`_uuid`,District,username,contains("long"),contains("lat")) %>% #select(contains("potential"))
+  transmute(uuid,District,username,potential_lat = coalesce(!!!select(.,matches(c("long","potential")))),
+            potential_lon = coalesce(!!!select(.,matches(c("lat","potential")))),
+            ntake_lat = coalesce(!!!select(.,matches(c("long","potential")))),
+            ntake_lon = coalesce(!!!select(.,matches(c("lat","potential")))),
+            competitor_lat = coalesce(!!!select(.,matches(c("long","competitor")))),
+            competitor_lat = coalesce(!!!select(.,matches(c("lat","competitor"))))    ) %>% 
+  mutate_at(vars(username,District),~as.factor(.))
+```
+
+```{r}
+# functions
+getColor <- function(data) {
+  sapply(data$cord1, function(cord1) {
+  if(cord1 =="potential") {
+    "green"
+  } else if(cord1 =="ntake") {
+    "orange"
+  } else {
+    "red"
+  } })
+}
+
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = getColor(dta)
+)
 ```
 
 ## R Markdown
@@ -19,17 +53,36 @@ Below is a map that shows the location of the
 Department of Statistics, Iowa State University.
 
 ```{r out.width='100%', echo=FALSE}
-library(leaflet)
-library(dplyr)
+
 # leaflet() %>% addTiles() %>%
 #   setView(-93.65, 42.0285, zoom = 17) %>%
 #   addPopups(
 #     -93.65, 42.0285,
 #     'Here is the <b>Department of Statistics</b>, ISU'
 #   )
+
+
 asset %>% transmute(lon =coalesce( potential_site_cordinates_latitude,potential_site_cordinates_001_latitude,Potential_gps_latitude),
                     lat = coalesce(potential_site_cordinates_longitude,potential_site_cordinates_001_longitude,Potential_gps_longitude)) %>% 
   filter(!is.na(lon)) %>% 
   leaflet() %>% addTiles() %>% 
   addMarkers(~lon,~lat)
+```
+
+```{r eruptions, echo=FALSE}
+selectInput(
+  'breaks', label = 'Number of bins:',
+  choices = unique(dta$username)#, selected = 20
+)
+
+renderLeaflet({
+  dta %>% 
+    filter(username== input$breaks) %>% 
+    tidyr::pivot_longer(cols = c(potential_lat, potential_lon ,ntake_lat ,ntake_lon, competitor_lat)) %>% 
+    tidyr::separate(col = name,sep = "_",into = paste0("cord",1:2)) %>% tidyr::pivot_wider(names_from = cord2,values_from = value) %>% 
+    leaflet() %>% addTiles() %>% 
+    addAwesomeMarkers(~lon, ~lat, icon=icons)
+    # addCircleMarkers(~lon,~lat,color = ~cord1)
+
+})
 ```

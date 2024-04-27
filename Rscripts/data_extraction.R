@@ -16,7 +16,7 @@ kobo_setup(url = "https://eu.kobotoolbox.org",
 asset_list <- kobo_asset_list()
 
 uid <- asset_list %>% filter(name == "survey1") %>% pull(uid)# "aYuTZn9vegi3Z49MXwKjep"
-asset <- kobo_asset(uid) %>% kobo_data()
+asset <- kobo_asset(uid) %>% kobo_data(colnames_label = F)
 asset %>% readr::write_rds("./Data/test_data.rds",compress = "bz")
 
 
